@@ -5,6 +5,7 @@ import com.mikhail_golovackii.filestoragewithrest.model.Event;
 import com.mikhail_golovackii.filestoragewithrest.repository.EventRepository;
 import com.mikhail_golovackii.filestoragewithrest.repository.impl.EventRepositoryImpl;
 import com.mikhail_golovackii.filestoragewithrest.service.EventService;
+import java.io.File;
 import java.util.List;
 
 public class EventServiceImpl implements EventService{
@@ -41,12 +42,8 @@ public class EventServiceImpl implements EventService{
 
     @Override
     public void deleteElement(Event event) {
+        deleteFileFromStorage(event);
         repository.delete(event);
-    }
-
-    @Override
-    public String getFilePathByFileName(String fileName) {
-        return repository.getFilePathByFileName(fileName);
     }
 
     @Override
@@ -54,4 +51,10 @@ public class EventServiceImpl implements EventService{
         return repository.getEventByFileName(name);
     }
 
+    private void deleteFileFromStorage(Event event) {
+        String filePath = event.getFilePath() + event.getFileName();
+        File file = new File(filePath);
+        file.delete();
+    }
+    
 }

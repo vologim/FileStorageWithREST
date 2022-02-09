@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import javax.servlet.ServletException;
@@ -27,7 +26,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-@WebServlet(urlPatterns = "/files")
+@WebServlet(urlPatterns = "/files/*")
 public class FileServlet extends HttpServlet {
 
     private EventService eventService;
@@ -55,14 +54,21 @@ public class FileServlet extends HttpServlet {
 
         resp.setContentType("application/octet-stream");
 
-        String fileName = req.getParameter("fileName");
+        String pathInfo = req.getPathInfo();
 
-        if (fileName == null) {
+        if (pathInfo == null) {
             try (PrintWriter writer = resp.getWriter()) {
                 eventService.getAllElements().forEach(elem -> writer.write(new Gson().toJson(elem)));
             }
         } else {
-            Event event = eventService.getEventByFileName(fileName);
+            String[] parts = pathInfo.split("/");
+            Long eventId = Long.parseLong(parts[1]);
+            Event event = eventService.getElementById(eventId);
+            
+            if (event == null) {
+                return;
+            }
+            
             String filePath = event.getFilePath() + event.getFileName();
             
             try (InputStream in = new FileInputStream(filePath);
@@ -86,8 +92,10 @@ public class FileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String id = req.getParameter("userId");
-        User user = userService.getElementById(Long.parseLong(id));
+        String pathInfo = req.getPathInfo();
+        String[] params = pathInfo.split("/");
+        Long userId = Long.parseLong(params[1]);
+        User user = userService.getElementById(userId);
 
         if (user == null) {
             return;
@@ -116,9 +124,10 @@ public class FileServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String id = req.getParameter("userId");
-
-        User user = userService.getElementById(Long.parseLong(id));
+        String pathInfo = req.getPathInfo();
+        String[] params = pathInfo.split("/");
+        Long userId = Long.parseLong(params[1]);
+        User user = userService.getElementById(userId);
 
         if (user == null) {
             return;
@@ -149,31 +158,14 @@ public class FileServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         
-        String id = req.getParameter("userId");
-        List<String> filesNamesList = Arrays.asList(req.getParameterValues("fileName"));
+        String pathInfo = req.getPathInfo();
+        String[] params = pathInfo.split("/");
+        Long eventId = Long.parseLong(params[1]);
 
-        User user = userService.getElementById(Long.parseLong(id));
-
-        if (user == null || filesNamesList == null) {
-            return;
-        }
-
-        try {
-            for (String fileName : filesNamesList) {
-                if (filesNamesList.contains(fileName)) {
-                    String pathFile = eventService.getFilePathByFileName(fileName) + fileName;
-                    File file = new File(pathFile);
-                    file.delete();
-
-                    Event event = eventService.getEventByFileName(fileName);
-                    eventService.deleteElement(event);
-
-                    user.deleteEvent(event);
-                    userService.updateElement(user);
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        Event event = eventService.getElementById(eventId);
+        
+        if (event != null) {
+            eventService.deleteElement(event);
         }
     }
 }

@@ -66,17 +66,6 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
-    public String getFilePathByFileName(String fileName) {
-        try (Session session = sessionFactory.openSession()) {
-            return (String) session.createQuery("SELECT e.filePath FROM Event e "
-                    + "WHERE e.fileName = '" + fileName + "'").getSingleResult();
-        } catch (Exception ex) {
-            System.out.println("Error + " + ex.getMessage());
-            return null;
-        }
-    }
-
-    @Override
     public Event getEventByFileName(String name) {
         try (Session session = sessionFactory.openSession()) {
             return (Event) session.createQuery("FROM Event e WHERE e.fileName = '" + name + "'").getSingleResult();
