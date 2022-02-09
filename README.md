@@ -19,7 +19,8 @@ in POST and PUT you need to send JSON in the body
 | POST       | /users             | create user                     |   you need to send JSON in the body        |
 | PUT        | /users             | change user                     |     you need to send JSON in the body      |
 | DELETE     | /users/{id}        | delete user                     |           |
-files:
+
+  files:
 | HTTP method |           URL           |                Operation  |             Information  |
 |:----------:|:-----------------------:|:--------------------------:|:--------------------------:|
 | GET        | /files             | get information about files in json  |           |
