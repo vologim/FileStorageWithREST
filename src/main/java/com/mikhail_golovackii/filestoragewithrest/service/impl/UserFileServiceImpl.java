@@ -1,15 +1,19 @@
 package com.mikhail_golovackii.filestoragewithrest.service.impl;
 
+import com.mikhail_golovackii.filestoragewithrest.dto.UserFileDTO;
 import com.mikhail_golovackii.filestoragewithrest.model.UserFile;
 import com.mikhail_golovackii.filestoragewithrest.repository.UserFileRepository;
 import com.mikhail_golovackii.filestoragewithrest.repository.impl.UserFileRepositoryImpl;
 import com.mikhail_golovackii.filestoragewithrest.service.UserFileService;
+import com.mikhail_golovackii.filestoragewithrest.utils.MappingUtils;
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserFileServiceImpl implements UserFileService {
 
     private UserFileRepository repository;
+    private final MappingUtils mappingUtils = new MappingUtils();
 
     public UserFileServiceImpl() {
         this.repository = new UserFileRepositoryImpl();
@@ -20,29 +24,29 @@ public class UserFileServiceImpl implements UserFileService {
     }
 
     @Override
-    public void saveElement(UserFile elem) {
-        repository.save(elem);
+    public void saveElement(UserFileDTO elem) {
+        repository.save(mappingUtils.mapToUserFile(elem));
     }
 
     @Override
-    public void updateElement(UserFile elem) {
-        repository.update(elem);
+    public void updateElement(UserFileDTO elem) {
+        repository.update(mappingUtils.mapToUserFile(elem));
     }
 
     @Override
-    public UserFile getElementById(Long id) {
-        return repository.getById(id);
+    public UserFileDTO getElementById(Long id) {
+        return mappingUtils.mapToUserFileDto(repository.getById(id));
     }
 
     @Override
-    public List<UserFile> getAllElements() {
-        return repository.getAll();
+    public List<UserFileDTO> getAllElements() {
+        return repository.getAll().stream().map(mappingUtils::mapToUserFileDto).collect(Collectors.toList());
     }
 
     @Override
-    public void deleteElement(UserFile elem) {
-        deleteFileFromStorage(elem);
-        repository.delete(elem);
+    public void deleteElement(UserFileDTO elem) {
+        deleteFileFromStorage(mappingUtils.mapToUserFile(elem));
+        repository.delete(mappingUtils.mapToUserFile(elem));
     }
 
     @Override

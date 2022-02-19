@@ -1,8 +1,9 @@
 package com.mikhail_golovackii.filestoragewithrest.servlet;
 
 import com.google.gson.Gson;
+import com.mikhail_golovackii.filestoragewithrest.dto.UserDTO;
+import com.mikhail_golovackii.filestoragewithrest.dto.UserFileDTO;
 import com.mikhail_golovackii.filestoragewithrest.model.Event;
-import com.mikhail_golovackii.filestoragewithrest.model.User;
 import com.mikhail_golovackii.filestoragewithrest.model.UserFile;
 import com.mikhail_golovackii.filestoragewithrest.service.EventService;
 import com.mikhail_golovackii.filestoragewithrest.service.UserFileService;
@@ -10,6 +11,7 @@ import com.mikhail_golovackii.filestoragewithrest.service.UserService;
 import com.mikhail_golovackii.filestoragewithrest.service.impl.EventServiceImpl;
 import com.mikhail_golovackii.filestoragewithrest.service.impl.UserFileServiceImpl;
 import com.mikhail_golovackii.filestoragewithrest.service.impl.UserServiceImpl;
+import com.mikhail_golovackii.filestoragewithrest.utils.MappingUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,7 +31,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-@WebServlet(urlPatterns = "api/files/*")
+@WebServlet(urlPatterns = "/files/*")
 public class UserFileServlet extends HttpServlet {
 
     private EventService eventService;
@@ -58,7 +60,7 @@ public class UserFileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Long userId = Long.parseLong(req.getHeader("userId"));
-        User user = userService.getElementById(userId);
+        UserDTO user = userService.getElementById(userId);
         
         if (user == null) {
             return;
@@ -78,7 +80,7 @@ public class UserFileServlet extends HttpServlet {
         } else {
             String[] parts = pathInfo.split("/");
             Long userFileId = Long.parseLong(parts[1]);
-            UserFile userFile = userFileService.getElementById(userFileId);
+            UserFileDTO userFile = userFileService.getElementById(userFileId);
             
             if (userFile == null) {
                 return;
@@ -111,7 +113,7 @@ public class UserFileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Long userId = Long.parseLong(req.getHeader("userId"));
-        User user = userService.getElementById(userId);
+        UserDTO user = userService.getElementById(userId);
 
         if (user == null) {
             return;
@@ -124,7 +126,7 @@ public class UserFileServlet extends HttpServlet {
                 item.write(file);
 
                 UserFile userFile = new UserFile(item.getName(), filePath);
-                userFileService.saveElement(userFile);
+                userFileService.saveElement(new MappingUtils().mapToUserFileDto(userFile));
 
                 user.addFile(userFile);
                 userService.updateElement(user);
@@ -144,7 +146,7 @@ public class UserFileServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Long userId = Long.parseLong(req.getHeader("userId"));
-        User user = userService.getElementById(userId);
+        UserDTO user = userService.getElementById(userId);
 
         if (user == null) {
             return;
@@ -158,7 +160,7 @@ public class UserFileServlet extends HttpServlet {
 
                 UserFile userFile = userFileService.getUserFileByFileName(item.getName());
 
-                userFileService.updateElement(userFile);
+                userFileService.updateElement(new MappingUtils().mapToUserFileDto(userFile));
 
                 user.getFiles().set(user.getFiles().indexOf(userFile), userFile);
                 userService.updateElement(user);
@@ -178,7 +180,7 @@ public class UserFileServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         
         Long userId = Long.parseLong(req.getHeader("userId"));
-        User user = userService.getElementById(userId);
+        UserDTO user = userService.getElementById(userId);
         
         if (user == null) {
             return;
@@ -188,7 +190,7 @@ public class UserFileServlet extends HttpServlet {
         String[] params = pathInfo.split("/");
         Long userFileId = Long.parseLong(params[1]);
 
-        UserFile userFile = userFileService.getElementById(userFileId);
+        UserFileDTO userFile = userFileService.getElementById(userFileId);
         
         if (user.getFiles().contains(userFile)) {
             userFileService.deleteElement(userFile);

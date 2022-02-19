@@ -2,8 +2,8 @@
 package com.mikhail_golovackii.filestoragewithrest.servlet;
 
 import com.google.gson.Gson;
+import com.mikhail_golovackii.filestoragewithrest.dto.UserDTO;
 import com.mikhail_golovackii.filestoragewithrest.model.Event;
-import com.mikhail_golovackii.filestoragewithrest.model.User;
 import com.mikhail_golovackii.filestoragewithrest.service.EventService;
 import com.mikhail_golovackii.filestoragewithrest.service.UserService;
 import com.mikhail_golovackii.filestoragewithrest.service.impl.EventServiceImpl;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = "api/users/*")
+@WebServlet(urlPatterns = "/users/*")
 public class UserServlet extends HttpServlet{
 
     private UserService userService;
@@ -45,7 +45,7 @@ public class UserServlet extends HttpServlet{
             Long userId = Long.parseLong(parts[1]);
             
             try (PrintWriter writer = resp.getWriter()) {
-                User user = userService.getElementById(userId);
+                UserDTO user = userService.getElementById(userId);
                 writer.write(new Gson().toJson(user));
             }
         }
@@ -55,7 +55,7 @@ public class UserServlet extends HttpServlet{
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BufferedReader reader = req.getReader();
         Gson gson = new Gson();
-        User newUser = gson.fromJson(reader, User.class);
+        UserDTO newUser = gson.fromJson(reader, UserDTO.class);
         
         if (newUser != null) {
             userService.saveElement(newUser);
@@ -69,9 +69,9 @@ public class UserServlet extends HttpServlet{
         
         BufferedReader reader = req.getReader();
         Gson gson = new Gson();
-        User newUser = gson.fromJson(reader, User.class);
+        UserDTO newUser = gson.fromJson(reader, UserDTO.class);
         
-        User user = userService.getElementById(newUser.getId());
+        UserDTO user = userService.getElementById(newUser.getId());
         
         if (user != null && newUser != null) {
             userService.updateElement(newUser);
@@ -86,7 +86,7 @@ public class UserServlet extends HttpServlet{
         String[] params = pathInfo.split("/");
         Long userId = Long.parseLong(params[1]);
 
-        User user = userService.getElementById(userId);
+        UserDTO user = userService.getElementById(userId);
         
         if (user != null) {
             userService.deleteElement(user);
