@@ -2,8 +2,9 @@
 
 Console CRUD application that interacts with the database 
 Entities:
-- User (Long id, String name, List<Event> events)
-- Event (Long id, String fileName, String filePath, LocalDateTime dateUploadFile, LocalDateTime dateLastModifiedFile)
+- User (Long id, String name, List<UserFile> files)
+- UserFile (Long id, String fileName, String filePath)
+- Event (Long id, String event)
 
 File storage path
 ```sh
@@ -23,11 +24,11 @@ in POST and PUT you need to send JSON in the body
 
 | HTTP method |           URL           |                Operation  |             Information  |
 |:----------:|:-----------------------:|:--------------------------:|:--------------------------:|
-| GET        | /files             | get information about files in json  |           |
-| GET        | /files/{id}        | download file from file storage     |           |
-| POST       | /files/{userId}    | add file in file storage            |   you need to send JSON in the body        |
-| PUT        | /files/{userId}    | change file in file storage         |     you need to send JSON in the body      |
-| DELETE     | /users/{id}        | delete file                          |           |
+| GET        | /files             | get information about files in json  |   you need to send "userId" in Header        |
+| GET        | /files/{id}        | download file from file storage     |    you need to send "userId" in Header       |
+| POST       | /files/{userId}    | add file in file storage            |   you need to send "userId" in Header and need to send JSON in the body        |
+| PUT        | /files/{userId}    | change file in file storage         |     you need to send "userId" in Header and need to send JSON in the body      |
+| DELETE     | /users/{id}        | delete file                          |    you need to send "userId" in Header       |
 
 Technologies:
 ```sh
@@ -39,4 +40,5 @@ Maven
 Flyway
 HTTP
 GSON
+Lombok
 ```
