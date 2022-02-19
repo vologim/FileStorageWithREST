@@ -13,9 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name = "user")
+@Data
 public class User {
 
     @Id
@@ -28,7 +30,7 @@ public class User {
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private List<Event> events;
+    private List<UserFile> files;
 
     public User() {
     }
@@ -37,45 +39,16 @@ public class User {
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void addFile(UserFile file) {
+        if (files == null) {
+            files = new ArrayList<>();
+        }
+        files.add(file);
     }
     
-    public void addEvent(Event event) {
-        if (events == null) {
-            events = new ArrayList<>();
+    public void deleteEvent(UserFile file) {
+        if (files != null) {
+            files.remove(file);
         }
-        events.add(event);
-    }
-    
-    public void deleteEvent(Event event) {
-        if (events != null) {
-            events.remove(event);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", name=" + name + ", events=" + events + '}';
     }
 }

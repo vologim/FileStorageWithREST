@@ -13,5 +13,5 @@ public interface BaseRepository <T, Id> {
     
     public List<T> getAll();
     
-    public void delete(T id);
+    public void delete(T elem);
 }

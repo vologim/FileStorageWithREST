@@ -1,5 +1,5 @@
+com/mikhail_golovackii/filestoragewithrest/service/UserFileService.class
 com/mikhail_golovackii/filestoragewithrest/repository/UserRepository.class
-com/mikhail_golovackii/filestoragewithrest/servlet/FileServlet.class
 com/mikhail_golovackii/filestoragewithrest/repository/impl/EventRepositoryImpl.class
 com/mikhail_golovackii/filestoragewithrest/service/UserService.class
 com/mikhail_golovackii/filestoragewithrest/service/impl/EventServiceImpl.class
@@ -8,8 +8,13 @@ com/mikhail_golovackii/filestoragewithrest/repository/impl/UserRepositoryImpl.cl
 com/mikhail_golovackii/filestoragewithrest/model/User.class
 com/mikhail_golovackii/filestoragewithrest/service/impl/UserServiceImpl.class
 com/mikhail_golovackii/filestoragewithrest/service/EventService.class
+com/mikhail_golovackii/filestoragewithrest/repository/UserFileRepository.class
 com/mikhail_golovackii/filestoragewithrest/service/BaseService.class
+com/mikhail_golovackii/filestoragewithrest/model/UserFile.class
+com/mikhail_golovackii/filestoragewithrest/service/impl/UserFileServiceImpl.class
 com/mikhail_golovackii/filestoragewithrest/repository/EventRepository.class
 com/mikhail_golovackii/filestoragewithrest/servlet/UserServlet.class
+com/mikhail_golovackii/filestoragewithrest/servlet/UserFileServlet.class
 com/mikhail_golovackii/filestoragewithrest/utils/HibernateUtil.class
+com/mikhail_golovackii/filestoragewithrest/repository/impl/UserFileRepositoryImpl.class
 com/mikhail_golovackii/filestoragewithrest/repository/BaseRepository.class

@@ -10,7 +10,7 @@ import org.hibernate.SessionFactory;
 
 public class UserRepositoryImpl implements UserRepository {
 
-    private static SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     
     @Override
     public void save(User elem) {
@@ -37,8 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getById(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            return (User) session.createQuery("FROM User u LEFT JOIN "
-                    + "FETCH u.events WHERE u.id = " + id).getSingleResult();
+            return (User) session.createQuery("FROM User u LEFT JOIN FETCH u.files WHERE u.id = " + id).getSingleResult();
         } catch (Exception ex) {
             System.out.println("Error + " + ex.getMessage());
             return null;
@@ -48,8 +47,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAll() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM User u LEFT JOIN "
-                    + "FETCH u.events").getResultList();
+            return session.createQuery("FROM User u LEFT JOIN FETCH u.files").getResultList();
         } catch (Exception ex) {
             System.out.println("Error + " + ex.getMessage());
             return null;

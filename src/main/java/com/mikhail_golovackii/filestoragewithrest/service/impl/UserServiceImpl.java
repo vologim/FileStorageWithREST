@@ -1,8 +1,8 @@
 
 package com.mikhail_golovackii.filestoragewithrest.service.impl;
 
-import com.mikhail_golovackii.filestoragewithrest.model.Event;
 import com.mikhail_golovackii.filestoragewithrest.model.User;
+import com.mikhail_golovackii.filestoragewithrest.model.UserFile;
 import com.mikhail_golovackii.filestoragewithrest.repository.UserRepository;
 import com.mikhail_golovackii.filestoragewithrest.repository.impl.UserRepositoryImpl;
 import com.mikhail_golovackii.filestoragewithrest.service.UserService;
@@ -48,9 +48,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private void deleteUserFiles(User user) {
-        List<Event> events = user.getEvents();
-        for (Event event : events) {
-            String filePath = event.getFilePath() + event.getFileName();
+        List<UserFile> files = user.getFiles();
+        for (UserFile userFile : files) {
+            String filePath = userFile.getFilePath() + userFile.getFileName();
             File file = new File(filePath);
             file.delete();
         }

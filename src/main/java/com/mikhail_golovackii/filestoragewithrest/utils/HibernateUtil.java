@@ -3,6 +3,7 @@ package com.mikhail_golovackii.filestoragewithrest.utils;
 
 import com.mikhail_golovackii.filestoragewithrest.model.Event;
 import com.mikhail_golovackii.filestoragewithrest.model.User;
+import com.mikhail_golovackii.filestoragewithrest.model.UserFile;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -15,6 +16,7 @@ public class HibernateUtil {
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Event.class)
                 .addAnnotatedClass(User.class)
+                .addAnnotatedClass(UserFile.class)
                 .buildSessionFactory();
     }
     

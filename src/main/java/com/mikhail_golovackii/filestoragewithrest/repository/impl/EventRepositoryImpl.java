@@ -10,7 +10,7 @@ import org.hibernate.SessionFactory;
 
 public class EventRepositoryImpl implements EventRepository {
 
-    private static SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     
     @Override
     public void save(Event elem) {
@@ -64,15 +64,4 @@ public class EventRepositoryImpl implements EventRepository {
             System.out.println("Error + " + ex.getMessage());
         }
     }
-
-    @Override
-    public Event getEventByFileName(String name) {
-        try (Session session = sessionFactory.openSession()) {
-            return (Event) session.createQuery("FROM Event e WHERE e.fileName = '" + name + "'").getSingleResult();
-        } catch (Exception ex) {
-            System.out.println("Error + " + ex.getMessage());
-            return null;
-        }
-    }
-
 }
